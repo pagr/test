@@ -78,12 +78,12 @@
                     <navigationItem key="navigationItem" title="Add item" id="qyG-5t-1Wq">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="sAz-9Z-93k">
                             <connections>
-                                <segue destination="GpX-ot-aWQ" kind="unwind" unwindAction="unwindToList:" id="jBm-Qi-u5f"/>
+                                <segue destination="GpX-ot-aWQ" kind="unwind" unwindAction="unwindToList:" id="bMi-Xq-AQq"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="WmE-gb-YAm">
                             <connections>
-                                <segue destination="GpX-ot-aWQ" kind="unwind" unwindAction="unwindToList:" id="zTb-OB-xF7"/>
+                                <segue destination="GpX-ot-aWQ" kind="unwind" unwindAction="unwindToList:" id="h3p-Cq-FZf"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

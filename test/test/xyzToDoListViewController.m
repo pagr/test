@@ -12,49 +12,43 @@
 
 #import "xyzToDoItem.h"
 
+#import "ToDoItemCoreData.h"
+#import "xyzAppDelegate.h"
+
 @interface xyzToDoListViewController ()
 
-@property (nonatomic) NSMutableArray *toDoItems;
+@property (nonatomic) NSArray *toDoItems;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 @end
 
 @implementation xyzToDoListViewController
 
-- (NSMutableArray *)toDoItems {
-    if (!_toDoItems) _toDoItems = [[NSMutableArray alloc] init];
+- (NSArray *)toDoItems {
+    if (!_toDoItems) _toDoItems = [[NSArray alloc] init];
     return _toDoItems;
 }
 
 - (void) loadInitialData {
-    xyzToDoItem *item1 = [[xyzToDoItem alloc] init];
-    item1.itemName = @"Program some Apps!";
-    item1.creationDate = [NSDate date];
-    item1.completed = NO;
-
-    xyzToDoItem *item2 = [[xyzToDoItem alloc] init];
-    item2.itemName = @"SHOW OFF some labs!";
-    item2.creationDate = [NSDate date];
-    item2.completed = NO;
     
-    [self.toDoItems addObject:item1];
-    [self.toDoItems addObject:item2];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    xyzToDoItem *toDoItem = [self.toDoItems objectAtIndex:indexPath.row];
-    toDoItem.completed = !toDoItem.completed;
-    [tableView reloadRowsAtIndexPaths:(NSArray *)@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-}
-
-- (IBAction)unwindToList:(UIStoryboardSegue *)segue {
-    xyzAddToDoItemViewController *source = (xyzAddToDoItemViewController *) segue.sourceViewController;
-    if (source.toDoItem) {
-        [self.toDoItems addObject:source.toDoItem];
-        [self.tableView reloadData];
-    }
+    // initializing NSFetchRequest
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
+    //Setting Entity to be Queried
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ToDoItemCoreData" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSError* error;
     
+    // Query on managedObjectContext With Generated fetchRequest
+    self.toDoItems = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    //Create a new object and sync it with database
+    ToDoItemCoreData *item=[NSEntityDescription insertNewObjectForEntityForName:@"ToDoItemCoreData" inManagedObjectContext:self.managedObjectContext];
+    item.name=@"test";
+    item.isCompleted=NO;
+    item.creationDate=[NSDate date];
+    [self.managedObjectContext save:&error];
+
 }
 
 
@@ -70,12 +64,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self loadInitialData];
+    
+    
+    
+    //Skaffa en referens
+    xyzAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+    //för att hämta vår objekthanterare
+    self.managedObjectContext = appDelegate.managedObjectContext;
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self loadInitialData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -102,13 +104,13 @@
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    xyzToDoItem *item = [self.toDoItems objectAtIndex:indexPath.row];
+    ToDoItemCoreData *item = [self.toDoItems objectAtIndex:indexPath.row];
     //cell.textLabel.text =[item.itemName stringByAppendingString:[item.creationDate description]];
-    cell.textLabel.text = item.itemName;
+    cell.textLabel.text = item.name;
 
     // Configure the cell...
     
-    cell.accessoryType = item.completed ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    cell.accessoryType = item.isCompleted ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     
     return cell;
 }
