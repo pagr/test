@@ -41,7 +41,6 @@
     item1.creationDate = [NSDate date];
     item1.completed = NO;
 
-    
     xyzToDoItem *item2 = [[xyzToDoItem alloc] init];
     item2.itemName = @"SHOW OFF some labs!";
     item2.creationDate = [NSDate date];
