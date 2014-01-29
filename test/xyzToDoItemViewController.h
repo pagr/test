@@ -11,6 +11,10 @@
 
 @interface xyzToDoItemViewController : UIViewController
 
-@property xyzToDoItem *toDoItem;
+
+@property (nonatomic, retain) NSString * itemName;
+@property (nonatomic, retain) NSDate * creationDate;
+@property (nonatomic, retain) NSNumber * completed;
+
 
 @end

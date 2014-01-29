@@ -10,11 +10,11 @@
 #import "xyzAddToDoItemViewController.h"
 #import "xyzToDoItemViewController.h"
 #import "xyzToDoItem.h"
+#import "xyzAppDelegate.h"
 
 @interface xyzToDoListViewController ()
 
-@property (nonatomic) NSMutableArray *toDoItems;
-
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @end
 
 @implementation xyzToDoListViewController
@@ -26,38 +26,46 @@
         UITableView *view = (UITableView *) [[cell superview] superview];
         int index = [[view indexPathForCell:cell] row];
         xyzToDoItemViewController *controller = (xyzToDoItemViewController *) segue.destinationViewController;
-        controller.toDoItem = [self.toDoItems objectAtIndex:index];
+#warning raden under är nog viktig
+        //controller.toDoItem = [self.toDoItems objectAtIndex:index];
     }
 }
 
-- (NSMutableArray *)toDoItems {
-    if (!_toDoItems) _toDoItems = [[NSMutableArray alloc] init];
-    return _toDoItems;
-}
 
-- (void) loadInitialData {
-    xyzToDoItem *item1 = [[xyzToDoItem alloc] init];
-    item1.itemName = @"Program some Apps!";
+- (void) addItem:(NSString *)name{
+    xyzToDoItem *item1 = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem"inManagedObjectContext:self.managedObjectContext];
+    item1.itemName = name;
     item1.creationDate = [NSDate date];
     item1.completed = NO;
-
-    xyzToDoItem *item2 = [[xyzToDoItem alloc] init];
-    item2.itemName = @"SHOW OFF some labs!";
-    item2.creationDate = [NSDate date];
-    item2.completed = NO;
     
-    [self.toDoItems addObject:item1];
-    [self.toDoItems addObject:item2];
+    NSError *error;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Error adding items: %@", [error localizedDescription]);
+    }
+}
+- (void) loadInitialData {
+    
+    //[self addItem:@"Program some Apps!"];
+    //[self addItem:@"SHOW OFF some labs!"];
+    
+    [super viewDidLoad];
+    xyzAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+    
+    // Fetching Records and saving it in "fetchedRecordsArray" object
+    
+    
+    
+    [self.tableView reloadData];
 }
 
 
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue {
     xyzAddToDoItemViewController *source = (xyzAddToDoItemViewController *) segue.sourceViewController;
-    if (source.toDoItem) {
-        [self.toDoItems addObject:source.toDoItem];
-        [self.tableView reloadData];
+    if (source.addText) {
+        [self addItem:source.addText];
     }
+    [self.tableView reloadData];
 }
 
 - (IBAction)updateItem:(UIStoryboardSegue *)segue {
@@ -66,8 +74,8 @@
 
 - (IBAction)deleteItem:(UIStoryboardSegue *)segue {
     xyzToDoItemViewController *source = (xyzToDoItemViewController *) segue.sourceViewController;
-    
-    [self.toDoItems removeObject:[source toDoItem]];
+#warning Funktionen är temporärt borta
+    //[self.toDoItems removeObject:[source toDoItem]];
     [self.tableView reloadData];
 }
 
@@ -83,6 +91,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //get the instance of the managedObjectContext and store it locally in this class
+    xyzAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+    self.managedObjectContext = appDelegate.managedObjectContext;
+    
     [self loadInitialData];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -108,22 +120,45 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.toDoItems count];
+    
+    
+    // Prepare to get list of data
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ToDoItem"inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    //execute the request and return
+    NSError* error;
+    return [self.managedObjectContext countForFetchRequest:fetchRequest error:&error];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Prepare cell
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    xyzToDoItem *item = [self.toDoItems objectAtIndex:indexPath.row];
-    //cell.textLabel.text =[item.itemName stringByAppendingString:[item.creationDate description]];
-    cell.textLabel.text = item.itemName;
-
-    // Configure the cell...
     
+    xyzToDoItem* item=[self getSingleRow:indexPath.row];
+    
+    //set values to cell
+    cell.textLabel.text = item.itemName;
     cell.accessoryType = item.completed ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     
     return cell;
+}
+
+-(xyzToDoItem*) getSingleRow:(int)index{
+    //prepare request one row of data
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ToDoItem"inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setFetchOffset:index];
+    [fetchRequest setFetchLimit:1];
+    [fetchRequest setEntity:entity];
+    
+    //Request of row of data
+    NSError* error;
+    NSArray *oneItemArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    return [oneItemArray objectAtIndex:0];
 }
 
 /*

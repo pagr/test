@@ -22,12 +22,12 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (sender == self.deleteButton) {
-        self.toDoItem = nil;
+        self.itemName = Nil;
     }
 }
 
 - (IBAction)completedChanged:(UISwitch *)sender {
-    self.toDoItem.completed = sender.isOn;
+    self.completed =[NSNumber numberWithBool:sender.isOn];
 }
 
 
@@ -43,9 +43,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.label.text = self.toDoItem.itemName;
-    self.completedSwitch.on = self.toDoItem.completed;
-    self.dateLabel.text = [self.toDoItem.creationDate description];
+    self.label.text = self.itemName;
+    self.completedSwitch.on = self.completed;
+    self.dateLabel.text = [self.creationDate description];
 	// Do any additional setup after loading the view.
 }
 

@@ -19,11 +19,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString *text = self.textField.text;
     if (sender == self.doneButton && text.length) {
-        
-        self.toDoItem = [[xyzToDoItem alloc] init];
-        self.toDoItem.itemName = text;
-        self.toDoItem.completed = NO;
-        self.toDoItem.creationDate = [NSDate date];
+        self.addText = text;
     }
 }
 
