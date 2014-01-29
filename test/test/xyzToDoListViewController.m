@@ -30,7 +30,6 @@
     item1.creationDate = [NSDate date];
     item1.completed = NO;
 
-    
     xyzToDoItem *item2 = [[xyzToDoItem alloc] init];
     item2.itemName = @"SHOW OFF some labs!";
     item2.creationDate = [NSDate date];
@@ -40,7 +39,7 @@
     [self.toDoItems addObject:item2];
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     xyzToDoItem *toDoItem = [self.toDoItems objectAtIndex:indexPath.row];
     toDoItem.completed = !toDoItem.completed;
