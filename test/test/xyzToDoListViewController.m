@@ -8,7 +8,7 @@
 
 #import "xyzToDoListViewController.h"
 #import "xyzAddToDoItemViewController.h"
-
+#import "xyzToDoItemViewController.h"
 #import "xyzToDoItem.h"
 
 @interface xyzToDoListViewController ()
@@ -18,6 +18,17 @@
 @end
 
 @implementation xyzToDoListViewController
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([sender isKindOfClass:[UITableViewCell class]]) {
+        UITableViewCell *cell = (UITableViewCell *) sender;
+        UITableView *view = (UITableView *) [[cell superview] superview];
+        int index = [[view indexPathForCell:cell] row];
+        xyzToDoItemViewController *controller = (xyzToDoItemViewController *) segue.destinationViewController;
+        controller.toDoItem = [self.toDoItems objectAtIndex:index];
+    }
+}
 
 - (NSMutableArray *)toDoItems {
     if (!_toDoItems) _toDoItems = [[NSMutableArray alloc] init];
@@ -40,12 +51,7 @@
     [self.toDoItems addObject:item2];
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    xyzToDoItem *toDoItem = [self.toDoItems objectAtIndex:indexPath.row];
-    toDoItem.completed = !toDoItem.completed;
-    [tableView reloadRowsAtIndexPaths:(NSArray *)@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-}
+
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue {
     xyzAddToDoItemViewController *source = (xyzAddToDoItemViewController *) segue.sourceViewController;
@@ -53,10 +59,18 @@
         [self.toDoItems addObject:source.toDoItem];
         [self.tableView reloadData];
     }
-    
-    
 }
 
+- (IBAction)updateItem:(UIStoryboardSegue *)segue {
+    [self.tableView reloadData];
+}
+
+- (IBAction)deleteItem:(UIStoryboardSegue *)segue {
+    xyzToDoItemViewController *source = (xyzToDoItemViewController *) segue.sourceViewController;
+    
+    [self.toDoItems removeObject:[source toDoItem]];
+    [self.tableView reloadData];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

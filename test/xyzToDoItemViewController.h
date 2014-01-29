@@ -1,5 +1,5 @@
 //
-//  xyzToDoListViewController.h
+//  xyzToDoItemViewController.h
 //  test
 //
 //  Created by Sami Purmonen on 2014-01-29.
@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "xyzToDoItem.h"
 
-@interface xyzToDoListViewController : UITableViewController
+@interface xyzToDoItemViewController : UIViewController
 
+@property xyzToDoItem *toDoItem;
 
 @end
