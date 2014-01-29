@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26D3831A1899161B00332F6E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26D383191899161B00332F6E /* Main.storyboard */; };
 		DAF58AF3189914FA00B740F4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF58AF2189914FA00B740F4 /* Foundation.framework */; };
 		DAF58AF5189914FA00B740F4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF58AF4189914FA00B740F4 /* CoreGraphics.framework */; };
 		DAF58AF7189914FA00B740F4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF58AF6189914FA00B740F4 /* UIKit.framework */; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		26D383191899161B00332F6E /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		DAF58AEF189914FA00B740F4 /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF58AF2189914FA00B740F4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DAF58AF4189914FA00B740F4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -109,6 +111,7 @@
 			children = (
 				DAF58B01189914FA00B740F4 /* xyzAppDelegate.h */,
 				DAF58B02189914FA00B740F4 /* xyzAppDelegate.m */,
+				26D383191899161B00332F6E /* Main.storyboard */,
 				DAF58B04189914FA00B740F4 /* Images.xcassets */,
 				DAF58AF9189914FA00B740F4 /* Supporting Files */,
 			);
@@ -222,6 +225,7 @@
 			files = (
 				DAF58AFD189914FA00B740F4 /* InfoPlist.strings in Resources */,
 				DAF58B05189914FA00B740F4 /* Images.xcassets in Resources */,
+				26D3831A1899161B00332F6E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,6 +446,7 @@
 				DAF58B1D189914FA00B740F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DAF58B1E189914FA00B740F4 /* Build configuration list for PBXNativeTarget "testTests" */ = {
 			isa = XCConfigurationList;
@@ -450,6 +455,7 @@
 				DAF58B20189914FA00B740F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
